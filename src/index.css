@@ -1,68 +1,99 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --border: 220 14% 96%;
+  --input: 220 14% 96%;
+  --ring: 215 20% 65%;
+  --background: 0 0% 100%;
+  --foreground: 222.2 47.4% 11.2%;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 47.4% 11.2%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 47.4% 11.2%;
+
+  --sidebar-background: 224 71% 4%;
+  --sidebar-foreground: 210 20% 98%;
+  --sidebar-primary: 210 80% 50%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 210 60% 40%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 220 14% 16%;
+  --sidebar-ring: 215 20% 65%;
+
+  --radius: 0.5rem;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+.container {
+  max-width: 100%;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  margin-left: auto;
+  margin-right: auto;
 }
-a:hover {
-  color: #535bf2;
+@font-face {
+    font-family: 'Coolvetica';
+    src: url('./fonts/coolvetica/Coolvetica Rg It.otf') format('truetype'); /* Adjust the path and format */
+    /* Add other font-weight and style variations if needed */
 }
-
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: 'Coolvetica', 'Poppins';
+}
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1400px;
+  }
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Border Radius Utilities */
+.radius-lg {
+  border-radius: var(--radius);
+}
+.radius-md {
+  border-radius: calc(var(--radius) - 2px);
+}
+.radius-sm {
+  border-radius: calc(var(--radius) - 4px);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+/* Accordion Animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+.accordion-up {
+  animation: accordion-up 0.2s ease-out;
 }
