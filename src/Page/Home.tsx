@@ -8,8 +8,8 @@ const Home = () => {
       <header className="border-b border-border bg-background">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-foreground">
-              Lemren.
+            <div className="text-2xl  text-foreground cor">
+              Lemren <span className="text-[#02f47f]">.</span>
             </div>
             
             <nav className="hidden md:flex items-center space-x-8">
@@ -36,7 +36,7 @@ const Home = () => {
       <section className="container mx-auto px-4 py-16">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
-            <h1 className="text-5xl lg:text-6xl font-bold text-foreground  leading-tight">
+            <h1 className="text-5xl lg:text-6xl font-bold text-foreground cor leading-tight">
               The largest marketplace to buy, sell, rent and hire vehicles.
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
