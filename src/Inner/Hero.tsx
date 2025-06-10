@@ -1,21 +1,42 @@
+import { useEffect } from 'react'
 import car1 from '../assets/white jeep.jpg'
 import car2 from '../assets/db.jpg'
 import car3 from '../assets/merc.jpg'
-
+import AOS from 'aos'
+import 'aos/dist/aos.css';
 export const Hero = () => {
+
+    useEffect(()=> {
+        AOS.init({
+            duration: 1000,
+            mirror: false,
+            once: true,
+        });
+    },[] );
   return (
     <div>
             <section className="container mx-auto px-4 py-16">
   <div className="grid lg:grid-cols-2 gap-12 items-center">
     {/* Text Section */}
     <div className="space-y-3 max-w-[89%] p-10 ">
-      <h1 className="text-4xl lg:text-5xl  cor leading-tight">
+      <h1   data-aos="zoom-in-up" 
+      data-aos-delay="500"
+     
+      data-aos-duration='500' className="text-4xl lg:text-5xl  cor leading-tight">
         The largest marketplace to buy, sell, rent and hire vehicles.
       </h1>
-      <p className="text-lg text-muted-foreground leading-relaxed">
+      <p data-aos="zoom-in-down"
+      data-aos-anchor-placement="top-bottom"
+       data-aos-delay="500"
+      data-aos-duration='500'
+       className="text-lg text-muted-foreground leading-relaxed">
         Join thousands of trusted users renting, buying, leasing, and selling vehicles anytime, anywhere.
       </p>
-      <button className="bg-black text-white hover:bg-black/90 px-8 py-3 text-lg rounded-full">
+      <button data-aos="zoom-in-up"
+      data-aos-anchor-placement="top-bottom"
+       data-aos-delay="500"
+      data-aos-duration='500'
+       className="bg-black text-white hover:bg-black/90 px-5 py-2 text-lg rounded-full">
         View cars
       </button>
     </div>
@@ -23,7 +44,9 @@ export const Hero = () => {
     {/* Image Layout */}
     <div className="grid grid-cols-3 gap-4">
       <div className="aspect-[3/7] bg-muted rounded-2xl overflow-hidden">
-        <img 
+        <img data-aos="fade-up-right"
+         data-aos-delay="500"
+        data-aos-duration='500'
            src={car1} 
           alt="White SUV in modern garage" 
           className="w-full h-full object-cover"
@@ -31,6 +54,10 @@ export const Hero = () => {
       </div>
       <div className="aspect-[3/7] bg-muted rounded-3xl overflow-hidden mt-8">
         <img 
+        data-aos="fade-up"
+         data-aos-delay="500"
+        data-aos-duration='500'
+        data-aos-anchor-placement="center-bottom"
           src={car3}
           alt="Silver sports car" 
           className="w-full h-full object-cover"
@@ -38,6 +65,9 @@ export const Hero = () => {
       </div>
       <div className="aspect-[3/7] bg-muted rounded-2xl overflow-hidden">
         <img 
+        data-aos="fade-up-left"
+         data-aos-delay="500"
+        data-aos-duration='500'
            src={car2}
           alt="Gray Mercedes AMG GT" 
           className="w-full h-full object-cover"
