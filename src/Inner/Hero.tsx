@@ -36,7 +36,7 @@ export const Hero = () => {
       data-aos-anchor-placement="top-bottom"
        data-aos-delay="500"
       data-aos-duration='500'
-       className="bg-black text-white hover:bg-black/90 px-5 py-2 text-lg rounded-full">
+       className="bg-black text-white hover:bg-black/90 px-10 py-2 text-lg rounded-full">
         View cars
       </button>
     </div>
@@ -82,19 +82,19 @@ export const Hero = () => {
       <section className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="text-center space-y-2">
-            <div className="text-4xl lg:text-5xl font-bold text-foreground">2,000+</div>
+            <div className="text-4xl lg:text-4xl  text-foreground">2,000+</div>
             <div className="text-muted-foreground">Cars sold over time</div>
           </div>
           <div className="text-center space-y-2">
-            <div className="text-4xl lg:text-5xl font-bold text-foreground">45,000+</div>
+            <div className="text-4xl lg:text-4xl  text-foreground">45,000+</div>
             <div className="text-muted-foreground">Rental deals closed</div>
           </div>
           <div className="text-center space-y-2">
-            <div className="text-4xl lg:text-5xl font-bold text-foreground">12,000+</div>
+            <div className="text-4xl lg:text-4xl  text-foreground">12,000+</div>
             <div className="text-muted-foreground">Vehicles hired overtime</div>
           </div>
           <div className="text-center space-y-2">
-            <div className="text-4xl lg:text-5xl font-bold text-foreground">3,000+</div>
+            <div className="text-4xl lg:text-4xl  text-foreground">3,000+</div>
             <div className="text-muted-foreground">Registered companies</div>
           </div>
         </div>
