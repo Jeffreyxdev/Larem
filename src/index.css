@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 
 :root {
   --border: 220 14% 96%;
@@ -43,6 +43,9 @@
 *{
   scroll-behavior: smooth;
 }
+body {
+  font-family: 'Poppins', sans-serif;
+}
 .container {
   max-width: 100%;
   padding-left: 2rem;
@@ -52,7 +55,8 @@
 }
 .cor {
     font-family: 'Coolvetica';
-    src: url('./fonts/coolvetica/Coolvetica Rg It.otf') format('truetype'); /* Adjust the path and format */
+    src: url('./fonts/coolvetica/Coolvetica Rg It.otf') format('truetype');
+    font-style: oblique; /* Adjust the path and format */
     /* Add other font-weight and style variations if needed */
 }
 .poppins
