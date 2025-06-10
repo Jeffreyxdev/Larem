@@ -1,6 +1,8 @@
 
 
 import Navbar from "../components/Navbar";
+import DiscoverDeals from "../Inner/DiscoverableCars";
+
 import { Hero } from "../Inner/Hero";
 import CompanyShowcase from "../Inner/Showcase";
 import Stats from "../Inner/stactistics"
@@ -12,6 +14,8 @@ const Home = () => {
       <Hero/>
       <Stats/>
       <CompanyShowcase/>
+      <DiscoverDeals/>
+     
 
     </div>
   );

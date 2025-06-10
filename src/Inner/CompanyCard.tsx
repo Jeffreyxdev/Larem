@@ -33,7 +33,7 @@ const CompanyCard = ({ company }: CompanyCardProps) => {
       </div>
       
       {/* Chat Interface */}
-      <div className="bg-gray-100 p-6 h-64 flex flex-col justify-end gap-3">
+      <div className="bg-gray-100 p-6 h-84 flex flex-col justify-end gap-3">
         {company.messages.map((message, index) => (
           <div
             key={index}
