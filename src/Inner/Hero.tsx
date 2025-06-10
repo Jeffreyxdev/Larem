@@ -8,9 +8,10 @@ export const Hero = () => {
 
     useEffect(()=> {
         AOS.init({
-            duration: 1000,
+            duration: 1500,
             mirror: false,
             once: true,
+             easing: 'ease-in-out',
         });
     },[] );
   return (
@@ -22,21 +23,21 @@ export const Hero = () => {
       <h1   data-aos="zoom-in-up" 
       data-aos-delay="500"
      
-      data-aos-duration='500' className="text-4xl lg:text-5xl  cor leading-tight">
+      data-aos-duration='1500' className="text-4xl lg:text-5xl  cor leading-tight">
         The largest marketplace to buy, sell, rent and hire vehicles.
       </h1>
       <p data-aos="zoom-in-down"
       data-aos-anchor-placement="top-bottom"
        data-aos-delay="500"
-      data-aos-duration='500'
-       className="text-lg text-muted-foreground leading-relaxed">
+      data-aos-duration='1500'
+       className="text-lg text-muted-foreground leading-relaxed mt-2.5">
         Join thousands of trusted users renting, buying, leasing, and selling vehicles anytime, anywhere.
       </p>
       <button data-aos="zoom-in-up"
       data-aos-anchor-placement="top-bottom"
        data-aos-delay="500"
-      data-aos-duration='500'
-       className="bg-black text-white hover:bg-black/90 px-10 py-2 text-lg rounded-full">
+      data-aos-duration='1500'
+       className="bg-black text-white hover:bg-black/90 px-10 py-2 text-lg rounded-full mt-3.5">
         View cars
       </button>
     </div>
@@ -46,7 +47,7 @@ export const Hero = () => {
       <div className="aspect-[3/7] bg-muted rounded-2xl overflow-hidden">
         <img data-aos="fade-up-right"
          data-aos-delay="500"
-        data-aos-duration='500'
+        data-aos-duration='1500'
            src={car1} 
           alt="White SUV in modern garage" 
           className="w-full h-full object-cover"
@@ -56,7 +57,7 @@ export const Hero = () => {
         <img 
         data-aos="fade-up"
          data-aos-delay="500"
-        data-aos-duration='500'
+        data-aos-duration='1500'
         data-aos-anchor-placement="center-bottom"
           src={car3}
           alt="Silver sports car" 
@@ -67,7 +68,7 @@ export const Hero = () => {
         <img 
         data-aos="fade-up-left"
          data-aos-delay="500"
-        data-aos-duration='500'
+        data-aos-duration='1500'
            src={car2}
           alt="Gray Mercedes AMG GT" 
           className="w-full h-full object-cover"
