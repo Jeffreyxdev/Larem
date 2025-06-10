@@ -26,7 +26,7 @@ useEffect(() => {
       <h1   data-aos="zoom-in-up" 
       data-aos-delay="200"
       data-aos-duration='1500' className="text-4xl lg:text-5xl  cor leading-tight">
-        The largest marketplace to buy, sell, rent and hire vehicles.
+        The largest marketplace to buy, sell, rent and hire  <span className='text-green-500'>vehicles.</span>
       </h1>
       <p data-aos="zoom-in-up"
        data-aos-delay="200"
@@ -82,8 +82,8 @@ useEffect(() => {
 
       {/* Statistics Section */}
       <section className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="text-center space-y-2">
+        <div className="grid font-semibold grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="text-center  space-y-2">
             <div className="text-4xl lg:text-4xl  text-foreground">2,000+</div>
             <div className="text-muted-foreground">Cars sold over time</div>
           </div>
