@@ -8,7 +8,7 @@ export const Hero = () => {
 
     useEffect(()=> {
         AOS.init({
-            duration: 1500,
+            duration: 1000,
             mirror: false,
             once: true,
              easing: 'ease-in-out',
@@ -21,21 +21,19 @@ export const Hero = () => {
     {/* Text Section */}
     <div className="space-y-3 max-w-[89%] p-10 ">
       <h1   data-aos="zoom-in-up" 
-      data-aos-delay="500"
-     
+      data-aos-delay="200"
       data-aos-duration='1500' className="text-4xl lg:text-5xl  cor leading-tight">
         The largest marketplace to buy, sell, rent and hire vehicles.
       </h1>
       <p data-aos="zoom-in-down"
-      data-aos-anchor-placement="top-bottom"
-       data-aos-delay="500"
+       data-aos-delay="200"
       data-aos-duration='1500'
        className="text-lg text-muted-foreground leading-relaxed mt-2.5">
         Join thousands of trusted users renting, buying, leasing, and selling vehicles anytime, anywhere.
       </p>
       <button data-aos="zoom-in-up"
       data-aos-anchor-placement="top-bottom"
-       data-aos-delay="500"
+       data-aos-delay="200"
       data-aos-duration='1500'
        className="bg-black text-white hover:bg-black/90 px-10 py-2 text-lg rounded-full mt-3.5">
         View cars
@@ -46,7 +44,7 @@ export const Hero = () => {
     <div className="grid grid-cols-3 gap-4">
       <div className="aspect-[3/7] bg-muted rounded-2xl overflow-hidden">
         <img data-aos="fade-up-right"
-         data-aos-delay="500"
+         data-aos-delay="200"
         data-aos-duration='1500'
            src={car1} 
           alt="White SUV in modern garage" 
@@ -56,7 +54,7 @@ export const Hero = () => {
       <div className="aspect-[3/7] bg-muted rounded-3xl overflow-hidden mt-8">
         <img 
         data-aos="fade-up"
-         data-aos-delay="500"
+         data-aos-delay="200"
         data-aos-duration='1500'
         data-aos-anchor-placement="center-bottom"
           src={car3}
@@ -67,7 +65,7 @@ export const Hero = () => {
       <div className="aspect-[3/7] bg-muted rounded-2xl overflow-hidden">
         <img 
         data-aos="fade-up-left"
-         data-aos-delay="500"
+         data-aos-delay="200"
         data-aos-duration='1500'
            src={car2}
           alt="Gray Mercedes AMG GT" 
