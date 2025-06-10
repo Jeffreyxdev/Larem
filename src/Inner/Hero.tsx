@@ -5,15 +5,18 @@ import car3 from '../assets/merc.jpg'
 import AOS from 'aos'
 import 'aos/dist/aos.css';
 export const Hero = () => {
+useEffect(() => {
+  AOS.init({
+    duration: 1200,
+    easing: 'ease-out-cubic',
+    once: true,
+    mirror: false,
+  });
 
-    useEffect(()=> {
-        AOS.init({
-            duration: 1000,
-            mirror: false,
-            once: true,
-             easing: 'ease-in-out',
-        });
-    },[] );
+  setTimeout(() => {
+    AOS.refresh();
+  }, 500);
+}, []);
   return (
     <div>
             <section className="container mx-auto px-4 py-16">
@@ -25,7 +28,7 @@ export const Hero = () => {
       data-aos-duration='1500' className="text-4xl lg:text-5xl  cor leading-tight">
         The largest marketplace to buy, sell, rent and hire vehicles.
       </h1>
-      <p data-aos="zoom-in-down"
+      <p data-aos="zoom-in-up"
        data-aos-delay="200"
       data-aos-duration='1500'
        className="text-lg text-muted-foreground leading-relaxed mt-2.5">
