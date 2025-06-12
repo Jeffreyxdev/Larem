@@ -15,7 +15,7 @@ const Home = () => {
       <Stats/>
       <CompanyShowcase/>
       <DiscoverDeals/>
-     
+    
 
     </div>
   );
