@@ -41,7 +41,7 @@ declare global {
 export const setUpRecaptcha = (containerId: string) => {
   if (typeof window !== 'undefined' && !window.recaptchaVerifier) {
     window.recaptchaVerifier = new RecaptchaVerifier(
-      auth, // This is the ID of your reCAPTCHA container div
+      containerId, // This is the ID of your reCAPTCHA container div
       {
         size: "invisible", // or "normal" for a visible widget
         callback: (response: string) => {
@@ -54,7 +54,7 @@ export const setUpRecaptcha = (containerId: string) => {
           });
         }
       },
-      containerId
+      auth
     );
     console.log("reCAPTCHA verifier initialized.");
   }

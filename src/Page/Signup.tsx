@@ -1,537 +1,407 @@
 'use client'
 import React, { useState, useEffect } from "react"; // Import useEffect
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
+
+
+'use client'
+
+import { Eye, EyeOff, Phone, Mail } from 'lucide-react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import  Label  from '@mui/material/InputLabel';
+import { MuiTelInput } from 'mui-tel-input';
+import  Button  from '@mui/material/Button';
+import  Checkbox  from '@mui/material/Checkbox';
+import GoogleIcon from '@mui/icons-material/Google';
+import { toast }  from 'react-toastify';
+import PhoneInput from 'react-phone-input-2';
+import ice from '../assets/ban.jpeg'
 import {
   auth,
   signInWithGoogle,
   signUpWithEmail,
-  sendPhoneVerificationCode, // Renamed from signInWithPhone in firebase.ts
-  confirmPhoneNumberSignIn, // New function for OTP confirmation
+  sendPhoneVerificationCode,
+  confirmPhoneNumberSignIn,
   setUpRecaptcha,
-} from "../DB/Firebase"; // Ensure this path is correct
+} from '../DB/Firebase';
+import Typography from "@mui/material/Typography";
+import MailIcon from '@mui/icons-material/Mail';
+import type{ ConfirmationResult } from 'firebase/auth';
 
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-
-import PhoneIcon from '@mui/icons-material/Phone';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { type AlertProps } from '@mui/material/Alert';
-
-import GoogleButton from 'react-google-button';
-
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-const SignUpForm = () => {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-    rememberMe: false,
-  });
+const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [signUpMethod, setSignUpMethod] = useState<'email' | 'phone'>('email');
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+    rememberMe: false
+  });
 
   // State for phone verification
   const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [confirmationResult, setConfirmationResult] = useState<any>(null); // To store the result from sendPhoneVerificationCode
+  const [otp, setOtp] = useState('');
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
-  // State for MUI Snackbar (toast)
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<AlertProps['severity']>('success');
+  
 
-  // --- Initialize reCAPTCHA on component mount ---
+  // Initialize reCAPTCHA on component mount
   useEffect(() => {
-    // Only set up reCAPTCHA once.
-    // It's crucial to have a div with id="recaptcha-container" in your JSX.
-    setUpRecaptcha("recaptcha-container");
-  }, []); // Empty dependency array means this runs once on mount
+    // reCAPTCHA will be set up when needed in sendPhoneVerificationCode
+  }, []);
+  const confirmPhoneNumberSignIn = async (confirmationResult: ConfirmationResult, otp: string) => {
+  const result = await confirmationResult.confirm(otp);
+  return result.user;
+};
+
 
   const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      phone: value
+    }));
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      if (signUpMethod === "email") {
-        const userCredential = await signUpWithEmail(
+      if (signUpMethod === 'email') {
+        if (formData.password !== formData.confirmPassword) {
+         toast.error("passweord dont match!");
+          return;
+        }
+
+        const user = await signUpWithEmail(
           formData.email,
           formData.password,
-          `${formData.firstName} ${formData.lastName}` // Pass name to signUpWithEmail
+          `${formData.firstName} ${formData.lastName}`
         );
 
-        setSnackbarMessage(`Welcome ${formData.firstName}! Your account has been created.`);
-        setSnackbarSeverity("success");
-        setSnackbarOpen(true);
-        // setIsAuth(true); // You might want to set authentication state here
+        toast.success(
+  <div>
+    <Typography variant="subtitle1" fontWeight="bold">Success!</Typography>
+    <Typography variant="body2">
+      Welcome {formData.firstName}! Your account has been created.
+    </Typography>
+  </div>
+);
       } else {
-        // --- Phone sign-up: First step, send OTP ---
-        const result = await sendPhoneVerificationCode(formData.phone);
-        setConfirmationResult(result); // Store for later confirmation
-        setOtpSent(true); // Indicate that OTP has been sent
-        setSnackbarMessage("Verification code sent to your phone!");
-        setSnackbarSeverity("info");
-        setSnackbarOpen(true);
+        // Phone sign-up: First step, send OTP
+        const result = await sendPhoneVerificationCode(`+${formData.phone}`);
+        setConfirmationResult(result);
+        setOtpSent(true);
+        toast.success("Verification code sent to your phone!");
       }
     } catch (error: any) {
-      console.error("Sign up error:", error);
-      setSnackbarMessage(error.message || "An error occurred during sign up.");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
+      console.error('Sign up error:', error);
+      toast.error("Sign up error");
     }
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent form submission if this is a separate form
+    e.preventDefault();
 
     if (!confirmationResult) {
-      setSnackbarMessage("No verification request found. Please send OTP first.");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
+    toast.error("No verification found!");
       return;
     }
 
     try {
-      const user = await confirmPhoneNumberSignIn(otp);
-      console.log("Phone number verified. User:", user);
-      setSnackbarMessage(`Welcome ${formData.firstName}! Your account has been created.`);
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-      // setIsAuth(true);
+      const user = await confirmPhoneNumberSignIn( confirmationResult, otp);
+      console.log('Phone number verified. User:', user);
+      toast.success(
+  <div>
+    <Typography variant="subtitle1" fontWeight="bold">Success!</Typography>
+    <Typography variant="body2">
+      Welcome {formData.firstName}! Your account has been created.
+    </Typography>
+  </div>
+);
+      
       // Reset state for next sign up
       setOtpSent(false);
-      setOtp("");
+      setOtp('');
       setConfirmationResult(null);
     } catch (error: any) {
-      console.error("OTP verification error:", error);
-      setSnackbarMessage(error.message || "Invalid or expired OTP. Please try again.");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
+      console.error('OTP verification error:', error);
+     toast.error("OTP verification error");
     }
   };
-
 
   const handleGoogleSignUp = async () => {
     try {
       const user = await signInWithGoogle();
-      console.log("Signed in with Google:", user);
-      setSnackbarMessage("Signed in with Google!");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-      // setIsAuth(true);
+      console.log('Signed in with Google:', user);
+     toast.success("Signed in with Google!");
     } catch (error: any) {
-      console.error("Google sign-in error:", error);
-      setSnackbarMessage(error.message || "Google sign-in failed.");
-      setSnackbarSeverity("error");
-      setSnackbarOpen(true);
+      console.error('Google sign-in error:', error);
+      toast.error(
+  <div>
+    <strong>Error</strong>
+    <div>{error.message || "Google sign-in failed."}</div>
+  </div>
+);
     }
-  };
-
-  const handleSnackbarClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbarOpen(false);
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-600 via-green-400 to-slate-700">
-      {/* Animated background stars */}
-      <div className="absolute inset-0">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute bg-white rounded-full opacity-60 animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 3 + 1}px`,
-              height: `${Math.random() * 3 + 1}px`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${Math.random() * 3 + 2}s`,
+    <div className="min-h-screen flex">
+      {/* Left side - Form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-md space-y-8">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-8">Create an account</h1>
+          </div>
+
+          {/* Google Sign Up Button */}
+          <Button
+            onClick={handleGoogleSignUp}
+            variant="outlined"
+            fullWidth
+            sx={{
+              height: '56px', // h-14
+              borderRadius: '16px', // rounded-2xl
+              fontSize: '1rem', // text-base
+              fontWeight: 500, // font-medium
+              textTransform: 'none',
             }}
-          />
-        ))}
+            startIcon={<GoogleIcon />} // optional
+          >
+            Continue with Google
+          </Button>
+
+          {/* Divider */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white text-gray-500">or</span>
+            </div>
+          </div>
+
+          {/* Sign up method toggle */}
+          <div className="flex bg-gray-100 rounded-2xl p-1">
+                        
+              <Button
+                type="button"
+                onClick={() => {
+                  setSignUpMethod('email');
+                  setOtpSent(false);
+                  setOtp('');
+                }}
+                variant={signUpMethod === 'email' ? 'contained' : 'outlined'}
+                color="primary"
+                fullWidth
+                sx={{
+                  height: '48px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textTransform: 'none'
+                }}
+                startIcon={<MailIcon />}
+              >
+                Email
+              </Button>
+           <MuiTelInput
+              value={formData.phone}
+              onChange={(value) => handleInputChange('phone', value)}
+              defaultCountry="NG" // change this as needed
+              fullWidth
+              forceCallingCode
+            >
+              <Phone className="w-4 h-4 mr-2" />
+              Phone
+            </MuiTelInput>
+          </div>
+          
+          <form onSubmit={signUpMethod === 'email' || !otpSent ? handleSignUp : handleVerifyOtp} className="space-y-6">
+            {/* Name fields - Always visible */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="firstName" className="text-base font-medium text-gray-900">
+                  First Name
+                </Label>
+                <input
+                  id="firstName"
+                  type="text"
+                  value={formData.firstName}
+                  onChange={(e) => handleInputChange('firstName', e.target.value)}
+                  className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
+                  placeholder="Rodriguez"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="lastName" className="text-base font-medium text-gray-900">
+                  Last Name
+                </Label>
+                <input
+                  id="lastName"
+                  type="text"
+                  value={formData.lastName}
+                  onChange={(e) => handleInputChange('lastName', e.target.value)}
+                  className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
+                  placeholder="Almaroz"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Email or Phone field */}
+            {!otpSent && (
+              signUpMethod === 'email' ? (
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-base font-medium text-gray-900">
+                    Email Address
+                  </Label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
+                    placeholder="RodriAlma@gmail.com"
+                    required
+                  />
+                </div>
+              ) : (
+                <PhoneInput
+                   country={'ng'} // default country, can be changed
+                  value={formData.phone}
+                  onChange={(phone) => handleInputChange('phone', phone)}
+                  enableSearch={true} // allow users to search for countries
+                  inputProps={{
+                    name: 'phone',
+                    required: true,
+                    autoFocus: false,
+                  }}
+                />
+              )
+            )}
+
+            {/* Password fields - Only for email sign-up */}
+            {signUpMethod === 'email' && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-base font-medium text-gray-900">
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={(e) => handleInputChange('password', e.target.value)}
+                      className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all pr-12"
+                      placeholder="••••••••••••"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword" className="text-base font-medium text-gray-900">
+                    Confirm Password
+                  </Label>
+                  <input
+                    id="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                    className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
+                    placeholder="••••••••••••"
+                    required
+                  />
+                </div>
+              </>
+            )}
+
+            {/* OTP input field - Only for phone sign-up AFTER OTP sent */}
+            {signUpMethod === 'phone' && otpSent && (
+              <div className="space-y-2">
+                <Label htmlFor="otp" className="text-base font-medium text-gray-900">
+                  Verification Code (OTP)
+                </Label>
+                <input
+                  id="otp"
+                  type="text"
+                  placeholder="Enter the 6-digit code"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
+                  required
+                />
+              </div>
+            )}
+
+            <div className="flex items-center space-x-3">
+             <Checkbox
+                  id="rememberMe"
+                  checked={formData.rememberMe}
+                  onChange={(e) => handleInputChange('rememberMe', e.target.checked)}
+                  className="mr-2"
+                />
+              <Label htmlFor="remember" className="text-base font-medium text-gray-900 cursor-pointer">
+                Remember me
+              </Label>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full h-14 rounded-2xl bg-black hover:bg-gray-800 text-white text-base font-medium transition-all duration-200"
+            >
+              {signUpMethod === 'email' || !otpSent ? 'Sign Up' : 'Verify OTP'}
+            </Button>
+          </form>
+
+          {/* Sign in link */}
+          <p className="text-center text-gray-600">
+            Already have an account?{' '}
+            <button className="text-black hover:underline font-medium">
+              Sign In
+            </button>
+          </p>
+
+          {/* Firebase Invisible reCAPTCHA container */}
+          <div id="recaptcha-container"></div>
+        </div>
       </div>
 
-      {/* Planetary elements */}
-      <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-br from-white/80 to-black/10 rounded-full opacity-80 blur-sm animate-pulse"></div>
-      <div className="absolute bottom-20 left-10 w-24 h-24 bg-gradient-to-br from-white to-purple-600 rounded-full opacity-60 blur-sm animate-pulse"></div>
-      <div className="absolute top-1/3 left-1/4 w-16 h-16 bg-gradient-to-br from-white/90 to-white/95 rounded-full opacity-40 blur-sm animate-pulse"></div>
+      {/* Right side - Background Image with Blur */}
+      <div className="flex-1 relative overflow-hidden rounded-r-3xl">
+  <img
+    src={ice}
+    alt="banner"
+    className="w-[70%] h-[60%] object-cover mx-0 items-center "
+  />
+  <div className="absolute inset-0 " />
 
-      {/* Main content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center">
-          {/* Left side - Brand */}
-          <div className="text-center md:text-left">
-            <h1 className="text-6xl md:text-7xl font-bold text-white mb-4 tracking-wider">
-              Drive with Your Terms
-            </h1>
-            <p className="text-xl text-white/80 font-light tracking-wide">
-              Discover the infinite possibilities
-            </p>
-          </div>
 
-          {/* Right side - Sign up form */}
-          <div className="flex justify-center md:justify-end">
-            <Box className="w-full max-w-md  "> {/* Use Box for div to leverage MUI sx prop later if needed */}
-              {/* Glassmorphism card */}
-              <Box className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl p-8 shadow-2xl">
-                <Typography variant="h5" component="h2" className="text-center mb-2 font-bold text-white/70">
-                  Get Started
-                </Typography>
-                <Typography variant="body2" className="text-center text-white/70 mb-8">
-                  CREATE YOUR FREE ACCOUNT
-                </Typography>
 
-                {/* Google Sign Up Button */}
-                <Box className="mb-6">
-                  <GoogleButton
-                    onClick={handleGoogleSignUp}
-                    style={{
-                      width: '99%',
-                      borderRadius: '22px',
-                      fontSize: '16px',
-                      height: '48px',
-                      backgroundColor: 'rgba(255,255,255,0.15)',
-                    }}
-                    className="bg-transparent "
-                  />
-                </Box>
-
-                {/* Divider */}
-                <Box className="relative mb-6">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-white/20"></div>
-                  </div>
-                  <Typography variant="body2" className="relative flex justify-center text-sm">
-                    <span className="px-4 bg-transparent text-white/70">or</span>
-                  </Typography>
-                </Box>
-
-                {/* Sign up method toggle */}
-                <Box className="flex mb-6 bg-white/5 rounded-xl p-1">
-                  <Button
-                    onClick={() => { setSignUpMethod('email'); setOtpSent(false); setOtp(''); }} // Reset OTP states
-                    variant={signUpMethod === 'email' ? 'contained' : 'text'}
-                    sx={{
-                      flexGrow: 1,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      py: '8px',
-                      px: '16px',
-                      borderRadius: '12px',
-                      fontSize: '14px',
-                      fontWeight: 500,
-                      textTransform: 'none',
-                      backgroundColor: signUpMethod === 'email' ? 'rgba(255,255,255,0.2)' : 'transparent',
-                      color: signUpMethod === 'email' ? 'white' : 'rgba(255,255,255,0.6)',
-                      '&:hover': {
-                        backgroundColor: signUpMethod === 'email' ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.05)',
-                        color: 'white',
-                      },
-                    }}
-                  >
-                    <MailOutlineIcon fontSize="small" />
-                    Email
-                  </Button>
-                  <Button
-                    onClick={() => { setSignUpMethod('phone'); setOtpSent(false); setOtp(''); }} // Reset OTP states
-                    variant={signUpMethod === 'phone' ? 'contained' : 'text'}
-                    sx={{
-                      flexGrow: 1,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      py: '8px',
-                      px: '16px',
-                      borderRadius: '12px',
-                      fontSize: '14px',
-                      fontWeight: 500,
-                      textTransform: 'none',
-                      backgroundColor: signUpMethod === 'phone' ? 'rgba(255,255,255,0.2)' : 'transparent',
-                      color: signUpMethod === 'phone' ? 'white' : 'rgba(255,255,255,0.6)',
-                      '&:hover': {
-                        backgroundColor: signUpMethod === 'phone' ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.05)',
-                        color: 'white',
-                      },
-                    }}
-                  >
-                    <PhoneIcon fontSize="small" />
-                    Phone
-                  </Button>
-                </Box>
-
-                {/* Main Form */}
-                <form onSubmit={signUpMethod === 'email' || !otpSent ? handleSignUp : handleVerifyOtp} className="space-y-4">
-                  {/* Name fields - Always visible */}
-                  <Box className="grid grid-cols-2 gap-3">
-                    <FormControl fullWidth>
-                      <InputLabel shrink htmlFor="firstName" sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', transform: 'translate(0, -9px) scale(1)' }}>
-                        First Name
-                      </InputLabel>
-                      <TextField
-                        id="firstName"
-                        placeholder="Rodriguez"
-                        value={formData.firstName}
-                        onChange={(e) => handleInputChange('firstName', e.target.value)}
-                        required
-                        variant="filled"
-                        InputProps={{
-                          disableUnderline: true,
-                          sx: {
-                            borderRadius: '12px',
-                            height: '48px',
-                            backgroundColor: 'rgba(255,255,255,0.1)',
-                            color: 'white',
-                            '&.Mui-focused': { backgroundColor: 'rgba(255,255,255,0.15)', },
-                            '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)', },
-                            '& .MuiInputBase-input::placeholder': { color: 'rgba(255,255,255,0.5)', opacity: 1, },
-                          },
-                        }}
-                        sx={{ '& .MuiFilledInput-root': { border: '1px solid rgba(255,255,255,0.2)', '&:hover:not(.Mui-disabled):before': { borderBottom: 'none', }, '&:after': { borderBottom: 'none', }, '&:before': { borderBottom: 'none', } } }}
-                      />
-                    </FormControl>
-                    <FormControl fullWidth>
-                      <InputLabel shrink htmlFor="lastName" sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', transform: 'translate(0, -9px) scale(1)' }}>
-                        Last Name
-                      </InputLabel>
-                      <TextField
-                        id="lastName"
-                        placeholder="Almaroz"
-                        value={formData.lastName}
-                        onChange={(e) => handleInputChange('lastName', e.target.value)}
-                        required
-                        variant="filled"
-                        InputProps={{
-                          disableUnderline: true,
-                          sx: {
-                            borderRadius: '12px',
-                            height: '48px',
-                            backgroundColor: 'rgba(255,255,255,0.1)',
-                            color: 'white',
-                            '&.Mui-focused': { backgroundColor: 'rgba(255,255,255,0.15)', },
-                            '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)', },
-                            '& .MuiInputBase-input::placeholder': { color: 'rgba(255,255,255,0.5)', opacity: 1, },
-                          },
-                        }}
-                        sx={{ '& .MuiFilledInput-root': { border: '1px solid rgba(255,255,255,0.2)', '&:hover:not(.Mui-disabled):before': { borderBottom: 'none', }, '&:after': { borderBottom: 'none', }, '&:before': { borderBottom: 'none', } } }}
-                      />
-                    </FormControl>
-                  </Box>
-
-                  {/* Email or Phone field */}
-                  {!otpSent && ( // Only show if OTP has not been sent yet
-                    <FormControl fullWidth>
-                      <InputLabel shrink htmlFor="contact" sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', transform: 'translate(0, -9px) scale(1)' }}>
-                        {signUpMethod === 'email' ? 'Email Address' : 'Phone Number'}
-                      </InputLabel>
-                      <TextField
-                        id="contact"
-                        type={signUpMethod === 'email' ? 'email' : 'tel'}
-                        placeholder={signUpMethod === 'email' ? 'RodriAlma@gmail.com' : '+1 (555) 123-4567'}
-                        value={signUpMethod === 'email' ? formData.email : formData.phone}
-                        onChange={(e) => handleInputChange(signUpMethod === 'email' ? 'email' : 'phone', e.target.value)}
-                        required
-                        variant="filled"
-                        InputProps={{
-                          disableUnderline: true,
-                          sx: {
-                            borderRadius: '12px',
-                            height: '48px',
-                            backgroundColor: 'rgba(255,255,255,0.1)',
-                            color: 'white',
-                            '&.Mui-focused': { backgroundColor: 'rgba(255,255,255,0.15)', },
-                            '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)', },
-                            '& .MuiInputBase-input::placeholder': { color: 'rgba(255,255,255,0.5)', opacity: 1, },
-                          },
-                        }}
-                        sx={{ '& .MuiFilledInput-root': { border: '1px solid rgba(255,255,255,0.2)', '&:hover:not(.Mui-disabled):before': { borderBottom: 'none', }, '&:after': { borderBottom: 'none', }, '&:before': { borderBottom: 'none', } } }}
-                      />
-                    </FormControl>
-                  )}
-
-                  {/* Password field - Only for email sign-up, or if phone OTP hasn't been sent yet */}
-                  {signUpMethod === 'email' && (
-                    <FormControl fullWidth>
-                      <InputLabel shrink htmlFor="password" sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', transform: 'translate(0, -9px) scale(1)' }}>
-                        Password
-                      </InputLabel>
-                      <TextField
-                        id="password"
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="••••••••••••"
-                        value={formData.password}
-                        onChange={(e) => handleInputChange('password', e.target.value)}
-                        required
-                        variant="filled"
-                        InputProps={{
-                          disableUnderline: true,
-                          sx: {
-                            borderRadius: '12px',
-                            height: '48px',
-                            backgroundColor: 'rgba(255,255,255,0.1)',
-                            color: 'white',
-                            '&.Mui-focused': { backgroundColor: 'rgba(255,255,255,0.15)', },
-                            '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)', },
-                            '& .MuiInputBase-input::placeholder': { color: 'rgba(255,255,255,0.5)', opacity: 1, },
-                          },
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={() => setShowPassword(!showPassword)}
-                                edge="end"
-                                sx={{ color: 'rgba(255,255,255,0.6)', '&:hover': { color: 'rgba(255,255,255,0.8)' } }}
-                              >
-                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                        }}
-                        sx={{ '& .MuiFilledInput-root': { border: '1px solid rgba(255,255,255,0.2)', '&:hover:not(.Mui-disabled):before': { borderBottom: 'none', }, '&:after': { borderBottom: 'none', }, '&:before': { borderBottom: 'none', } } }}
-                      />
-                    </FormControl>
-                  )}
-
-                  {/* OTP input field - Only for phone sign-up AFTER OTP sent */}
-                  {signUpMethod === 'phone' && otpSent && (
-                    <FormControl fullWidth>
-                      <InputLabel shrink htmlFor="otp" sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '14px', transform: 'translate(0, -9px) scale(1)' }}>
-                        Verification Code (OTP)
-                      </InputLabel>
-                      <TextField
-                        id="otp"
-                        type="text"
-                        placeholder="Enter the 6-digit code"
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value)}
-                        required
-                        variant="filled"
-                        InputProps={{
-                          disableUnderline: true,
-                          sx: {
-                            borderRadius: '12px',
-                            height: '48px',
-                            backgroundColor: 'rgba(255,255,255,0.1)',
-                            color: 'white',
-                            '&.Mui-focused': { backgroundColor: 'rgba(255,255,255,0.15)', },
-                            '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)', },
-                            '& .MuiInputBase-input::placeholder': { color: 'rgba(255,255,255,0.5)', opacity: 1, },
-                          },
-                        }}
-                        sx={{ '& .MuiFilledInput-root': { border: '1px solid rgba(255,255,255,0.2)', '&:hover:not(.Mui-disabled):before': { borderBottom: 'none', }, '&:after': { borderBottom: 'none', }, '&:before': { borderBottom: 'none', } } }}
-                      />
-                    </FormControl>
-                  )}
-
-                  {/* Remember me checkbox - Always visible */}
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        id="rememberMe"
-                        checked={formData.rememberMe}
-                        onChange={(e) => handleInputChange('rememberMe', e.target.checked)}
-                        sx={{
-                          color: 'rgba(255,255,255,0.3)',
-                          '&.Mui-checked': { color: 'rgba(255,255,255,0.5)', backgroundColor: 'rgba(255,255,255,0.2)', },
-                          '& .MuiSvgIcon-root': { borderRadius: '4px', border: '1px solid currentColor', width: '20px', height: '20px', '& path': { d: 'path("M0 0h24v24H0z")' } },
-                          '& .MuiTouchRipple-root': { display: 'none' },
-                          '&:hover': { backgroundColor: 'transparent', }
-                        }}
-                      />
-                    }
-                    label={
-                      <Typography variant="body2" className="text-white/70 text-sm">
-                        Remember Me
-                      </Typography>
-                    }
-                    sx={{ '& .MuiFormControlLabel-label': { marginLeft: '4px' } }}
-                  />
-
-                  {/* Sign up button */}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    fullWidth
-                    sx={{
-                      backgroundColor: 'rgba(255,255,255,0.15)',
-                      '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)', transform: 'scale(1.02)', },
-                      '&:active': { transform: 'scale(0.98)', },
-                      color: 'white',
-                      fontWeight: 500,
-                      py: '12px',
-                      px: '16px',
-                      borderRadius: '12px',
-                      height: '48px',
-                      transition: 'all 200ms ease',
-                      textTransform: 'none',
-                    }}
-                  >
-                    {signUpMethod === 'email' || !otpSent ? 'Sign Up' : 'Verify OTP'}
-                  </Button>
-                </form>
-
-                {/* Sign in link */}
-                <Typography variant="body2" className="text-center mt-6 text-white/60 text-sm">
-                  Already have an account?{' '}
-                  <Button
-                    component="span"
-                    onClick={() => console.log("Sign In clicked")}
-                    sx={{
-                      color: 'white',
-                      '&:hover': { color: 'rgba(255,255,255,0.8)', backgroundColor: 'transparent', },
-                      fontWeight: 500,
-                      textDecoration: 'underline',
-                      textUnderlineOffset: '2px',
-                      p: 0,
-                      minWidth: 'auto',
-                      textTransform: 'none',
-                      verticalAlign: 'baseline',
-                    }}
-                  >
-                    Sign In
-                  </Button>
-                  {/* Firebase Invisible reCAPTCHA container */}
-                  <div id="recaptcha-container"></div>
-                </Typography>
-              </Box>
-
-              {/* MUI Snackbar for notifications */}
-              <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
-                <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
-                  {snackbarMessage}
-                </Alert>
-              </Snackbar>
-            </Box>
-          </div>
-        </div>
+<ToastContainer position="top-right" autoClose={3000} />
       </div>
     </div>
   );
 };
 
-export default SignUpForm;
+export default Signup;

@@ -19,7 +19,7 @@ const App = () => {
   <QueryClientProvider client={queryClient}></QueryClientProvider>
   <Routes>
           <Route path="/" element={<Home/>} />
-         <Route path="/signup" element={<SignUpForm setIsAuth={setIsAuth}/>} />
+         <Route path="/signup" element={<SignUpForm/>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         </>

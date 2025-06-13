@@ -20,11 +20,13 @@
     "firebase": "^11.9.0",
     "framer-motion": "^12.16.0",
     "lucide-react": "^0.513.0",
+    "mui-tel-input": "^9.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-google-button": "^0.8.0",
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.16.0",
+    "react-phone-input-2": "^2.15.1",
     "react-router-dom": "^7.6.2",
     "react-toastify": "^11.0.5"
   },
