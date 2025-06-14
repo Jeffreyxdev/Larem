@@ -54,7 +54,7 @@ export const setUpRecaptcha = (containerId: string) => {
           });
         }
       },
-      auth
+      auth // This must be the Auth instance, and is correctly passed as the third argument
     );
     console.log("reCAPTCHA verifier initialized.");
   }

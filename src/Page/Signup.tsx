@@ -79,6 +79,7 @@ const Signup = () => {
         if (formData.password !== formData.confirmPassword) {
          toast.error("passweord dont match!");
           return;
+
         }
 
         const user = await signUpWithEmail(
@@ -155,10 +156,10 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className=" container min-h-screen flex">
       {/* Left side - Form */}
       <div className="flex-1 flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-md space-y-8 my-[20px]">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-8">Create an account</h1>
           </div>
@@ -170,10 +171,12 @@ const Signup = () => {
             fullWidth
             sx={{
               height: '56px', // h-14
+              border:'#00ac59 1px solid',
               borderRadius: '16px', // rounded-2xl
               fontSize: '1rem', // text-base
               fontWeight: 500, // font-medium
               textTransform: 'none',
+              color:'black'
             }}
             startIcon={<GoogleIcon />} // optional
           >
@@ -185,13 +188,13 @@ const Signup = () => {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
+            <div className="relative flex justify-center text-sm mt-5">
               <span className="px-4 bg-white text-gray-500">or</span>
-            </div>
+            </div> 
           </div>
 
           {/* Sign up method toggle */}
-          <div className="flex bg-gray-100 rounded-2xl p-1">
+          <div className="flex rounded-2xl p-1 gap-2 ">
                         
               <Button
                 type="button"
@@ -206,89 +209,137 @@ const Signup = () => {
                 sx={{
                   height: '48px',
                   borderRadius: '12px',
+                  backgroundColor: signUpMethod === 'email' ? 'black' : undefined,
+                  border: signUpMethod === 'email' ? '1px solid #0000' : '1px solid black',
+                  borderColor: signUpMethod === 'email' ? '#0000' : 'black',
+                  marginRight: '8px',
+                  
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  textTransform: 'none'
+                  textTransform: 'none',
+                  color: signUpMethod === 'email' ? 'white' : 'black'
+                
+
                 }}
                 startIcon={<MailIcon />}
               >
                 Email
               </Button>
-           <MuiTelInput
-              value={formData.phone}
-              onChange={(value) => handleInputChange('phone', value)}
-              defaultCountry="NG" // change this as needed
-              fullWidth
-              forceCallingCode
-            >
-              <Phone className="w-4 h-4 mr-2" />
-              Phone
-            </MuiTelInput>
+          <Button
+            type="button"
+            onClick={() => {
+              setSignUpMethod('phone');
+              setOtpSent(false);
+              setOtp('');
+            }}
+            variant={signUpMethod === 'phone' ? 'contained' : 'outlined'}
+            color="primary"
+            fullWidth
+            sx={{
+              height: '48px',
+              borderRadius: '12px',
+              backgroundColor: signUpMethod === 'phone' ? 'black' : undefined,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textTransform: 'none',
+              color: signUpMethod === 'phone' ? 'white' : 'black',
+              border: signUpMethod === 'phone' ? '1px solid #0000' : '1px solid black',
+              borderColor: signUpMethod === 'phone' ? '#0000' : 'black',
+
+            }}
+            startIcon={<Phone />}
+          >
+            Phone
+          </Button>
           </div>
           
-          <form onSubmit={signUpMethod === 'email' || !otpSent ? handleSignUp : handleVerifyOtp} className="space-y-6">
+          <form onSubmit={signUpMethod === 'email' || !otpSent ? handleSignUp : handleVerifyOtp} className="space-y-5">
             {/* Name fields - Always visible */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 items-center w-max">
               <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-base font-medium text-gray-900">
-                  First Name
-                </Label>
-                <input
-                  id="firstName"
-                  type="text"
-                  value={formData.firstName}
-                  onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
-                  placeholder="Rodriguez"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    id="firstName"
+                    type="text"
+                    value={formData.firstName}
+                    onChange={(e) => handleInputChange('firstName', e.target.value)}
+                    className="h-14 w-full pl-6 pr-4 rounded-2xl bg-gray-100 border border-gray-400 focus:ring-0 focus:ring-gray-200 focus:bg-white transition-all text-base"
+                    placeholder="First Name"       
+                    required
+                    style={{ minWidth: 280 }}
+                  />
+                  
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-base font-medium text-gray-900">
-                  Last Name
-                </Label>
-                <input
+                <div className="space-y-2">
+                <div className="relative">
+                  <input
                   id="lastName"
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
-                  placeholder="Almaroz"
+                  className="h-14 w-full pl-6 pr-4 rounded-2xl bg-gray-100 border border-gray-400 focus:ring-0 focus:ring-gray-200 focus:bg-white transition-all text-base"
+                  placeholder="Last Name"
                   required
-                />
-              </div>
+                  style={{ minWidth: 280 }}
+                  />
+                </div>
+                </div>
             </div>
 
             {/* Email or Phone field */}
             {!otpSent && (
               signUpMethod === 'email' ? (
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-base font-medium text-gray-900">
-                    Email Address
+                  
+                  <div className="relative"></div>
+                    <input
+                      id="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      className="h-14 w-full pl-6 pr-4 rounded-2xl bg-gray-100 border border-gray-400 focus:ring-0 focus:ring-gray-200 focus:bg-white transition-all text-base"
+                      placeholder="RodriAlma@gmail.com"
+                      required
+                      style={{ minWidth: 200 }}
+                    />
+                  </div>
+                
+              ) : (
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-base font-medium text-gray-900">
+                    Phone Number
                   </Label>
-                  <input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
-                    placeholder="RodriAlma@gmail.com"
+                  <MuiTelInput
+                    id="phone"
+                    value={formData.phone}
+                    onChange={(value) => handleInputChange('phone', value)}
+                    defaultCountry="NG"
+                    fullWidth
+                    forceCallingCode
+                    className="rounded-2xl bg-gray-100 border-0 border-gray-400 focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all text-base"
+                    sx={{
+                     
+                      width:'full',
+                      
+                     
+                      fontSize: '1rem',
+                      
+                    }}
+                    placeholder="e.g. 8123456789"
                     required
+                    TextFieldProps={{
+                      InputProps: {
+                        startAdornment: (
+                          <Phone className="w-5 h-5 mr-2 text-gray-400" />
+                        ),
+                        disableUnderline: true,
+                      },
+                    }}
                   />
                 </div>
-              ) : (
-                <PhoneInput
-                   country={'ng'} // default country, can be changed
-                  value={formData.phone}
-                  onChange={(phone) => handleInputChange('phone', phone)}
-                  enableSearch={true} // allow users to search for countries
-                  inputProps={{
-                    name: 'phone',
-                    required: true,
-                    autoFocus: false,
-                  }}
-                />
               )
             )}
 
@@ -305,14 +356,14 @@ const Signup = () => {
                       type={showPassword ? "text" : "password"}
                       value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
-                      className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all pr-12"
+                      className="h-14 rounded-2xl bg-gray-100  border-1 border-gray-400 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all "
                       placeholder="••••••••••••"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                      className="absolute ml-[-1.9vw] top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     >
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
@@ -328,7 +379,7 @@ const Signup = () => {
                     type="password"
                     value={formData.confirmPassword}
                     onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                    className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
+                    className="h-14 rounded-2xl bg-gray-100  border-1 border-gray-400 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
                     placeholder="••••••••••••"
                     required
                   />
@@ -348,7 +399,7 @@ const Signup = () => {
                   placeholder="Enter the 6-digit code"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
-                  className="h-14 rounded-2xl bg-gray-100 border-0 text-base focus:ring-2 focus:ring-gray-300 focus:bg-white transition-all"
+                  className="h-14 rounded-2xl bg-gray-100 border-1 border-gray-400 text-base focus:ring-2 focus:ring-black focus:bg-white transition-all"
                   required
                 />
               </div>
@@ -388,17 +439,24 @@ const Signup = () => {
       </div>
 
       {/* Right side - Background Image with Blur */}
-      <div className="flex-1 relative overflow-hidden rounded-r-3xl">
-  <img
-    src={ice}
-    alt="banner"
-    className="w-[70%] h-[60%] object-cover mx-0 items-center "
-  />
-  <div className="absolute inset-0 " />
+      <div className="flex-1 relative flex items-center-safe overflow-hidden rounded-r-3xl">
+        <img
+          src={ice}
+          alt="banner"
+          className="w-[80%] h-[70%] top-12 rounded-2xl bg-background object-cover absolute inset-0 filter blur-[1px]"
+          
+          draggable="false"
+        
 
-
-
-<ToastContainer position="top-right" autoClose={3000} />
+        />
+        {/* Overlay text */}
+        <div className="absolute top-20 ml-[-4.5vw] w-full flex items-start justify-center">
+          <span className="text-white text-4xl font-bold drop-shadow-lg">
+            Drive with your Terms
+          </span>
+        </div>
+        <div className="absolute inset-0" />
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     </div>
   );
