@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react"; // Import useEffect
 
 'use client'
 
-import { Eye, EyeOff, Phone, Mail } from 'lucide-react';
+import { Eye, EyeOff, Phone} from 'lucide-react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import  Label  from '@mui/material/InputLabel';
@@ -13,16 +13,9 @@ import  Button  from '@mui/material/Button';
 import  Checkbox  from '@mui/material/Checkbox';
 import GoogleIcon from '@mui/icons-material/Google';
 import { toast }  from 'react-toastify';
-import PhoneInput from 'react-phone-input-2';
+
 import ice from '../assets/ban.jpeg'
-import {
-  auth,
-  signInWithGoogle,
-  signUpWithEmail,
-  sendPhoneVerificationCode,
-  confirmPhoneNumberSignIn,
-  setUpRecaptcha,
-} from '../DB/Firebase';
+
 import Typography from "@mui/material/Typography";
 import MailIcon from '@mui/icons-material/Mail';
 import type{ ConfirmationResult } from 'firebase/auth';
@@ -64,50 +57,9 @@ const Signup = () => {
     }));
   };
 
-  const handlePhoneChange = (value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      phone: value
-    }));
-  };
+  
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      if (signUpMethod === 'email') {
-        if (formData.password !== formData.confirmPassword) {
-         toast.error("passweord dont match!");
-          return;
-
-        }
-
-        const user = await signUpWithEmail(
-          formData.email,
-          formData.password,
-          `${formData.firstName} ${formData.lastName}`
-        );
-
-        toast.success(
-  <div>
-    <Typography variant="subtitle1" fontWeight="bold">Success!</Typography>
-    <Typography variant="body2">
-      Welcome {formData.firstName}! Your account has been created.
-    </Typography>
-  </div>
-);
-      } else {
-        // Phone sign-up: First step, send OTP
-        const result = await sendPhoneVerificationCode(`+${formData.phone}`);
-        setConfirmationResult(result);
-        setOtpSent(true);
-        toast.success("Verification code sent to your phone!");
-      }
-    } catch (error: any) {
-      console.error('Sign up error:', error);
-      toast.error("Sign up error");
-    }
-  };
+ 
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,22 +91,6 @@ const Signup = () => {
     }
   };
 
-  const handleGoogleSignUp = async () => {
-    try {
-      const user = await signInWithGoogle();
-      console.log('Signed in with Google:', user);
-     toast.success("Signed in with Google!");
-    } catch (error: any) {
-      console.error('Google sign-in error:', error);
-      toast.error(
-  <div>
-    <strong>Error</strong>
-    <div>{error.message || "Google sign-in failed."}</div>
-  </div>
-);
-    }
-  };
-
   return (
     <div className=" container min-h-screen flex">
       {/* Left side - Form */}
@@ -166,7 +102,7 @@ const Signup = () => {
 
           {/* Google Sign Up Button */}
           <Button
-            onClick={handleGoogleSignUp}
+            // onClick={}
             variant="outlined"
             fullWidth
             sx={{
@@ -255,7 +191,7 @@ const Signup = () => {
           </Button>
           </div>
           
-          <form onSubmit={signUpMethod === 'email' || !otpSent ? handleSignUp : handleVerifyOtp} className="space-y-5">
+          <form  /*onSubmit={signUpMethod === 'email' || !otpSent ? handleSignUp : handleVerifyOtp} */ className="space-y-5"> 
             {/* Name fields - Always visible */}
             <div className="grid grid-cols-1 gap-4 items-center w-max">
               <div className="space-y-2">
