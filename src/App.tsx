@@ -4,8 +4,6 @@ import NotFound from "./Page/NotFound";
 import Home from "./Page/Home";
 import Companies from "./Page/companies/Companies";
 import SignUpForm from "./Page/Signup";
-import { auth } from "./DB/Firebase";
-import { useState } from "react";
 
 const queryClient = new QueryClient();
 

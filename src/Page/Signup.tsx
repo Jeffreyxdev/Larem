@@ -1,10 +1,10 @@
 'use client'
-import React, { useState, useEffect } from "react"; // Import useEffect
+import  { useState, useEffect } from "react"; // Import useEffect
 
 
 'use client'
 
-import { Eye, EyeOff, Phone, Mail } from 'lucide-react';
+import { Eye, EyeOff, Phone} from 'lucide-react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import  Label  from '@mui/material/InputLabel';
@@ -12,20 +12,13 @@ import { MuiTelInput } from 'mui-tel-input';
 import  Button  from '@mui/material/Button';
 import  Checkbox  from '@mui/material/Checkbox';
 import GoogleIcon from '@mui/icons-material/Google';
-import { toast }  from 'react-toastify';
-import PhoneInput from 'react-phone-input-2';
+// import { toast }  from 'react-toastify';
+
 import ice from '../assets/ban.jpeg'
-import {
-  auth,
-  signInWithGoogle,
-  signUpWithEmail,
-  sendPhoneVerificationCode,
-  confirmPhoneNumberSignIn,
-  setUpRecaptcha,
-} from '../DB/Firebase';
-import Typography from "@mui/material/Typography";
+
+// import Typography from "@mui/material/Typography";
 import MailIcon from '@mui/icons-material/Mail';
-import type{ ConfirmationResult } from 'firebase/auth';
+// import type{ ConfirmationResult } from 'firebase/auth';
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +36,7 @@ const Signup = () => {
   // State for phone verification
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  // const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
   
 
@@ -51,10 +44,10 @@ const Signup = () => {
   useEffect(() => {
     // reCAPTCHA will be set up when needed in sendPhoneVerificationCode
   }, []);
-  const confirmPhoneNumberSignIn = async (confirmationResult: ConfirmationResult, otp: string) => {
-  const result = await confirmationResult.confirm(otp);
-  return result.user;
-};
+//   const confirmPhoneNumberSignIn = async (confirmationResult: ConfirmationResult, otp: string) => {
+//   const result = await confirmationResult.confirm(otp);
+//   return result.user;
+// };
 
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -64,96 +57,39 @@ const Signup = () => {
     }));
   };
 
-  const handlePhoneChange = (value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      phone: value
-    }));
-  };
+  
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
+ 
 
-    try {
-      if (signUpMethod === 'email') {
-        if (formData.password !== formData.confirmPassword) {
-         toast.error("passweord dont match!");
-          return;
+//   const handleVerifyOtp = async (e: React.FormEvent) => {
+//     e.preventDefault();
 
-        }
+//     if (!confirmationResult) {
+//     toast.error("No verification found!");
+//       return;
+//     }
 
-        const user = await signUpWithEmail(
-          formData.email,
-          formData.password,
-          `${formData.firstName} ${formData.lastName}`
-        );
-
-        toast.success(
-  <div>
-    <Typography variant="subtitle1" fontWeight="bold">Success!</Typography>
-    <Typography variant="body2">
-      Welcome {formData.firstName}! Your account has been created.
-    </Typography>
-  </div>
-);
-      } else {
-        // Phone sign-up: First step, send OTP
-        const result = await sendPhoneVerificationCode(`+${formData.phone}`);
-        setConfirmationResult(result);
-        setOtpSent(true);
-        toast.success("Verification code sent to your phone!");
-      }
-    } catch (error: any) {
-      console.error('Sign up error:', error);
-      toast.error("Sign up error");
-    }
-  };
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!confirmationResult) {
-    toast.error("No verification found!");
-      return;
-    }
-
-    try {
-      const user = await confirmPhoneNumberSignIn( confirmationResult, otp);
-      console.log('Phone number verified. User:', user);
-      toast.success(
-  <div>
-    <Typography variant="subtitle1" fontWeight="bold">Success!</Typography>
-    <Typography variant="body2">
-      Welcome {formData.firstName}! Your account has been created.
-    </Typography>
-  </div>
-);
+//     try {
+//       const user = await confirmPhoneNumberSignIn( confirmationResult, otp);
+//       console.log('Phone number verified. User:', user);
+//       toast.success(
+//   <div>
+//     <Typography variant="subtitle1" fontWeight="bold">Success!</Typography>
+//     <Typography variant="body2">
+//       Welcome {formData.firstName}! Your account has been created.
+//     </Typography>
+//   </div>
+// );
       
-      // Reset state for next sign up
-      setOtpSent(false);
-      setOtp('');
-      setConfirmationResult(null);
-    } catch (error: any) {
-      console.error('OTP verification error:', error);
-     toast.error("OTP verification error");
-    }
-  };
-
-  const handleGoogleSignUp = async () => {
-    try {
-      const user = await signInWithGoogle();
-      console.log('Signed in with Google:', user);
-     toast.success("Signed in with Google!");
-    } catch (error: any) {
-      console.error('Google sign-in error:', error);
-      toast.error(
-  <div>
-    <strong>Error</strong>
-    <div>{error.message || "Google sign-in failed."}</div>
-  </div>
-);
-    }
-  };
+//       // Reset state for next sign up
+//       setOtpSent(false);
+//       setOtp('');
+//       setConfirmationResult(null);
+//     } catch (error: any) {
+//       console.error('OTP verification error:', error);
+//      toast.error("OTP verification error");
+//     }
+//   };
 
   return (
     <div className=" container min-h-screen flex">
@@ -166,7 +102,7 @@ const Signup = () => {
 
           {/* Google Sign Up Button */}
           <Button
-            onClick={handleGoogleSignUp}
+            // onClick={}
             variant="outlined"
             fullWidth
             sx={{
@@ -255,7 +191,7 @@ const Signup = () => {
           </Button>
           </div>
           
-          <form onSubmit={signUpMethod === 'email' || !otpSent ? handleSignUp : handleVerifyOtp} className="space-y-5">
+          <form  /*onSubmit={signUpMethod === 'email' || !otpSent ? handleSignUp : handleVerifyOtp} */ className="space-y-5"> 
             {/* Name fields - Always visible */}
             <div className="grid grid-cols-1 gap-4 items-center w-max">
               <div className="space-y-2">
@@ -330,14 +266,14 @@ const Signup = () => {
                     }}
                     placeholder="e.g. 8123456789"
                     required
-                    TextFieldProps={{
-                      InputProps: {
-                        startAdornment: (
-                          <Phone className="w-5 h-5 mr-2 text-gray-400" />
-                        ),
-                        disableUnderline: true,
-                      },
-                    }}
+                    // TextFieldProps={{
+                    //   InputProps: {
+                    //     startAdornment: (
+                    //       <Phone className="w-5 h-5 mr-2 text-gray-400" />
+                    //     ),
+                    //     disableUnderline: true,
+                    //   },
+                    // }}
                   />
                 </div>
               )
