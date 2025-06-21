@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 :root {
   --border: 220 14% 96%;
   --input: 220 14% 96%;
@@ -44,7 +43,11 @@ html {
   scroll-behavior: smooth;
 }
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
+}
+
+li {
+  list-style: none;
 }
 .container {
   max-width: 100%;
@@ -54,14 +57,14 @@ body {
   margin-right: auto;
 }
 .cor {
-    font-family: 'Coolvetica';
-    src: url('./fonts/coolvetica/Coolvetica Rg It.otf') format('truetype');
-    font-style: oblique; /* Adjust the path and format */
-    /* Add other font-weight and style variations if needed */
+  font-family: "Coolvetica";
+  src: url("./fonts/coolvetica/Coolvetica Rg It.otf") format("truetype");
+  font-style: oblique; /* Adjust the path and format */
+  /* Add other font-weight and style variations if needed */
 }
-.poppins
-{
-  font-family: 'Poppins';
+
+.poppins {
+  font-family: "Poppins";
 }
 @media (min-width: 1536px) {
   .container {
