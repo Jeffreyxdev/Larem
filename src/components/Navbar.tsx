@@ -19,18 +19,20 @@ const Navbar: React.FC = () => {
               Home
             </NavLink>
           </li>
-          <li>
+          {/*set to only show when logged in */}
+
+          {/* <li>  
             <NavLink
               to="/browse-cars"
               className="text-foreground hover:text-primary transition-colors"
             >
               Popular Listings
             </NavLink>
-          </li>
+          </li> */}
 
           <li>
             <NavLink
-              to="/browse-cars"
+              to="/explore"
               className="text-foreground hover:text-primary transition-colors"
             >
               Browse Cars

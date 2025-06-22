@@ -4,11 +4,12 @@ import NotFound from "./Page/NotFound";
 import Home from "./Page/Home";
 import Companies from "./Page/companies/Companies";
 import SignUpForm from "./Page/Signup";
+import Explore from "./Page/Explore/Explore";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
+  
 
   return (
     <>
@@ -17,6 +18,9 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="companies" element={<Companies />} />
+        <Route path="/companies/:companyId" element={<Companies />} />
+       <Route path="/companies/:companyId/:carId" element={<Companies />} />
+        <Route path="explore" element={<Explore />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

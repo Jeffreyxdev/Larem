@@ -1,7 +1,8 @@
 
 
+import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import DiscoverDeals from "../Inner/DiscoverableCars";
+
 
 import { Hero } from "../Inner/Hero";
 import CompanyShowcase from "../Inner/Showcase";
@@ -14,7 +15,8 @@ const Home = () => {
       <Hero/>
       <Stats/>
       <CompanyShowcase/>
-      <DiscoverDeals/>
+      {/* Add more sections as needed */}
+     <Footer/> {/*added footer*/}
     
 
     </div>
