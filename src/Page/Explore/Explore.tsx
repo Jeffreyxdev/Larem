@@ -4,7 +4,7 @@ import FilterSidebar from './components/FilterSidebar';
 import CarCard from './components/CarCard';
 import FeaturedCarousel from './components/FeaturedCarousel';
 import SortControls from './components/Sortcontrols';
-// import Navbar from '../../components/Navbar';
+// import Navbar from '../../components/Navbar'; //add navbar here
 
 
 const Explore = () => {
