@@ -20,6 +20,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/vite": "^4.1.8",
     "@tanstack/react-query": "^5.80.6",
+    "@vercel/analytics": "^1.5.0",
     "aos": "^2.3.4",
     "class-variance-authority": "^0.7.1",
     "firebase": "^11.9.0",

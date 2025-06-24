@@ -5,7 +5,7 @@ import Home from "./Page/Home";
 import Companies from "./Page/companies/Companies";
 import SignUpForm from "./Page/Signup";
 import Explore from "./Page/Explore/Explore";
-
+import { Analytics } from '@vercel/analytics/react';
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -22,7 +22,9 @@ const App = () => {
        <Route path="/companies/:companyId/:carId" element={<Companies />} />
         <Route path="explore" element={<Explore />} />
         <Route path="*" element={<NotFound />} />
+
       </Routes>
+       <Analytics />
     </>
   );
 };
